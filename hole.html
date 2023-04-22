@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>Smash-a-Hole</title>
+	<style>
+		body {
+			background-color: #1c1c1c;
+			font-family: Arial, sans-serif;
+			color: #ffffff;
+		}
+
+		.container {
+			max-width: 600px;
+			margin: 0 auto;
+			text-align: center;
+		}
+
+		.grid {
+			display: flex;
+			flex-wrap: wrap;
+			justify-content: center;
+			margin-top: 20px;
+		}
+
+		.hole {
+			width: 80px;
+			height: 80px;
+			background-color: #f4b942;
+			border-radius: 50%;
+			margin: 20px;
+			cursor: pointer;
+		}
+
+		.up {
+			background-color: #f9f9f9;
+			/* transform: translateY(-50%); */
+		}
+		/* .up {
+			background-image: url('mole.jpg');
+			background-position: center bottom;
+			background-repeat: no-repeat;
+			background-size: 60%;
+			transform: translateY(-50%);
+		} */
+
+
+		.score {
+			margin-top: 20px;
+			font-size: 24px;
+		}
+
+		.score span {
+			color: #f4b942;
+			font-weight: bold;
+		}
+
+		/* .hole:hover {
+			background-color: #ff6666;
+		} */
+
+		.hole:active {
+			transform: translateY(10px);
+		}
+	</style>
+</head>
+
+<body>
+	<div class="container">
+		<h1>Smash-a-Hole</h1>
+		<div class="grid">
+			<div class="hole"></div>
+			<div class="hole"></div>
+			<div class="hole"></div>
+			<div class="hole"></div>
+			<div class="hole"></div>
+			<div class="hole"></div>
+			<div class="hole"></div>
+			<div class="hole"></div>
+			<div class="hole"></div>
+			<div class="hole"></div>
+		</div>
+
+		<div class="score">
+			<p>Score: <span id="score">0</span></p>
+		</div>
+	</div>
+	<!-- <script src="app.js"></script> -->
+</body>
+<script>
+	const holes = document.querySelectorAll('.grid .hole');
+const scoreBoard = document.querySelector('#score');
+let score = 0;
+let timeUp = false;
+
+function randomTime(min, max) {
+  return Math.round(Math.random() * (max - min) + min);
+}
+
+function randomHole(holes) {
+  const index = Math.floor(Math.random() * holes.length);
+  const hole = holes[index];
+  return hole;
+}
+
+
+// function peep() {
+//   const time = randomTime(200, 1000);
+//   const hole = randomHole(holes);
+//   hole.classList.add('up');
+//   setTimeout(() => {
+//     hole.classList.remove('up');
+//     if (!timeUp) peep();
+//   }, time);
+// }
+
+function peep() {
+  const time = randomTime(200, 500);
+  const hole = randomHole(holes);
+  console.log("Hole:", hole);
+  hole.classList.add('up');
+  setTimeout(() => {
+    hole.classList.remove('up');
+    if (!timeUp) peep();
+  }, time);
+}
+
+
+function startGame() {
+  score = 0;
+  scoreBoard.textContent = score;
+  timeUp = false;
+  peep();
+  setTimeout(() => timeUp = true, 20000);
+}
+
+function bonk(e) {
+  if (!e.isTrusted) return; // prevents fake clicks
+  if (this.classList.contains('up')) {
+    score++;
+    scoreBoard.textContent = score;
+  }
+  this.classList.remove('up');
+}
+
+
+
+holes.forEach(hole => hole.addEventListener('click', bonk));
+
+window.onload = function() {
+  startGame();
+}
+
+</script>
+
+</html>
